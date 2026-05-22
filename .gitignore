@@ -1,0 +1,13 @@
+# Banco de dados local (dados reais, nao compartilhar)
+database.db
+backups/
+relatorios/
+
+# Ambiente virtual
+venv/
+__pycache__/
+*.pyc
+
+# IDE
+.idea/
+.vscode/

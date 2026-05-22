@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+
+{% block title %}Empresa{% endblock %}
+{% block page_title %}Dados da Empresa{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+<li class="breadcrumb-item active" aria-current="page">Empresa</li>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Header da seção ─────────────────────────────────── -->
+<div class="section-header mb-4">
+  <div>
+    <h2 class="section-title">
+      <i class="bi bi-building me-2"></i>Dados da Empresa
+    </h2>
+    <p class="section-subtitle">
+      Cadastre as informações da sua assistência técnica. Estes dados serão exibidos nos relatórios e na interface do sistema.
+    </p>
+  </div>
+  <div class="section-badge {% if empresa %}section-badge--edit{% else %}section-badge--new{% endif %}">
+    <i class="bi bi-{{ 'pencil-square' if empresa else 'plus-circle' }} me-1"></i>
+    {{ 'Editando cadastro' if empresa else 'Novo cadastro' }}
+  </div>
+</div>
+
+<!-- ── Formulário ─────────────────────────────────────── -->
+<form method="POST" action="{{ url_for('empresa_save') }}"
+      enctype="multipart/form-data"
+      id="form-empresa"
+      novalidate>
+
+  <div class="row g-4">
+
+    <!-- Coluna principal (formulário) -->
+    <div class="col-12 col-xl-8">
+      <div class="form-card">
+
+        <div class="form-card__header">
+          <i class="bi bi-info-circle me-2"></i>Informações Cadastrais
+        </div>
+
+        <div class="form-card__body">
+
+          <!-- Nome da Empresa -->
+          <div class="mb-4">
+            <label for="nome" class="form-label-custom">
+              <i class="bi bi-building"></i> Nome da Empresa
+              <span class="required-mark">*</span>
+            </label>
+            <input type="text"
+                   id="nome"
+                   name="nome"
+                   class="form-control form-control-custom"
+                   placeholder="Ex: TecFix Assistência Técnica"
+                   value="{{ empresa.nome if empresa and empresa.nome else '' }}"
+                   required
+                   maxlength="200" />
+          </div>
+
+          <!-- CNPJ / CPF -->
+          <div class="mb-4">
+            <label for="documento" class="form-label-custom">
+              <i class="bi bi-card-text"></i> CNPJ / CPF
+            </label>
+            <input type="text"
+                   id="documento"
+                   name="documento"
+                   class="form-control form-control-custom"
+                   placeholder="Ex: 00.000.000/0001-00"
+                   value="{{ empresa.documento if empresa and empresa.documento else '' }}"
+                   maxlength="20" />
+          </div>
+
+          <!-- Telefone -->
+          <div class="mb-4">
+            <label for="telefone" class="form-label-custom">
+              <i class="bi bi-telephone"></i> Telefone / WhatsApp
+            </label>
+            <input type="tel"
+                   id="telefone"
+                   name="telefone"
+                   class="form-control form-control-custom"
+                   placeholder="Ex: (11) 99999-9999"
+                   value="{{ empresa.telefone if empresa and empresa.telefone else '' }}"
+                   maxlength="20" />
+          </div>
+
+          <!-- E-mail -->
+          <div class="mb-4">
+            <label for="email" class="form-label-custom">
+              <i class="bi bi-envelope"></i> E-mail
+            </label>
+            <input type="email"
+                   id="email"
+                   name="email"
+                   class="form-control form-control-custom"
+                   placeholder="Ex: contato@minhaempresa.com.br"
+                   value="{{ empresa.email if empresa and empresa.email else '' }}"
+                   maxlength="120" />
+          </div>
+
+          <!-- Endereço -->
+          <div class="mb-2">
+            <label for="endereco" class="form-label-custom">
+              <i class="bi bi-geo-alt"></i> Endereço Completo
+            </label>
+            <textarea id="endereco"
+                      name="endereco"
+                      class="form-control form-control-custom"
+                      rows="3"
+                      placeholder="Ex: Rua das Flores, 123 — Centro, São Paulo/SP — CEP 01000-000"
+                      maxlength="300">{{ empresa.endereco if empresa and empresa.endereco else '' }}</textarea>
+          </div>
+
+        </div><!-- /form-card__body -->
+      </div><!-- /form-card -->
+    </div><!-- /col principal -->
+
+    <!-- Coluna lateral (logo + ações) -->
+    <div class="col-12 col-xl-4">
+
+      <!-- Card: Logo -->
+      <div class="form-card mb-4">
+        <div class="form-card__header">
+          <i class="bi bi-image me-2"></i>Logo da Empresa
+        </div>
+        <div class="form-card__body">
+
+          <!-- Preview da logo atual -->
+          <div class="logo-preview-area" id="logoPreviewArea">
+            {% if empresa and empresa.logo %}
+              <img src="{{ url_for('static', filename='logos/' ~ empresa.logo) }}"
+                   alt="Logo atual"
+                   class="logo-preview-img"
+                   id="logoPreview" />
+              <span class="logo-preview-label">Logo atual</span>
+            {% else %}
+              <div class="logo-placeholder" id="logoPlaceholder">
+                <i class="bi bi-image-fill"></i>
+                <span>Sem logo cadastrada</span>
+              </div>
+              <img src="" alt="Preview" class="logo-preview-img d-none" id="logoPreview" />
+            {% endif %}
+          </div>
+
+          <!-- Input de arquivo -->
+          <label for="logo" class="upload-btn mt-3">
+            <i class="bi bi-cloud-upload me-2"></i>
+            {{ 'Alterar logo' if empresa and empresa.logo else 'Enviar logo' }}
+          </label>
+          <input type="file"
+                 id="logo"
+                 name="logo"
+                 class="d-none"
+                 accept=".png,.jpg,.jpeg"
+                 aria-label="Upload de logo" />
+
+          <p class="upload-hint mt-2">
+            <i class="bi bi-info-circle me-1"></i>
+            PNG, JPG ou JPEG · Máximo 4 MB
+          </p>
+
+          <!-- Nome do arquivo selecionado -->
+          <div class="selected-file d-none" id="selectedFileInfo">
+            <i class="bi bi-paperclip me-1"></i>
+            <span id="selectedFileName"></span>
+          </div>
+
+        </div>
+      </div><!-- /card logo -->
+
+      <!-- Card: Ações -->
+      <div class="form-card">
+        <div class="form-card__body">
+          <button type="submit"
+                  class="btn-save w-100 mb-3"
+                  id="btn-salvar">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            Salvar Dados
+          </button>
+          <a href="{{ url_for('dashboard') }}"
+             class="btn-cancel w-100">
+            <i class="bi bi-arrow-left me-2"></i>
+            Voltar ao Dashboard
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /col lateral -->
+  </div><!-- /row -->
+
+</form>
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script>
+  // ── Preview de imagem antes do upload ────────────────
+  const inputLogo      = document.getElementById('logo');
+  const previewImg     = document.getElementById('logoPreview');
+  const placeholder    = document.getElementById('logoPlaceholder');
+  const fileInfo       = document.getElementById('selectedFileInfo');
+  const fileNameSpan   = document.getElementById('selectedFileName');
+
+  if (inputLogo) {
+    inputLogo.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      // Mostra nome do arquivo
+      fileNameSpan.textContent = file.name;
+      fileInfo.classList.remove('d-none');
+
+      // Preview via FileReader
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        previewImg.src = e.target.result;
+        previewImg.classList.remove('d-none');
+        if (placeholder) placeholder.classList.add('d-none');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ── Máscara simples de CNPJ/CPF ──────────────────────
+  const inputDoc = document.getElementById('documento');
+  if (inputDoc) {
+    inputDoc.addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '');
+      if (v.length <= 11) {
+        // CPF: 000.000.000-00
+        v = v.replace(/(\d{3})(\d)/, '$1.$2')
+             .replace(/(\d{3})(\d)/, '$1.$2')
+             .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      } else {
+        // CNPJ: 00.000.000/0001-00
+        v = v.replace(/^(\d{2})(\d)/, '$1.$2')
+             .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+             .replace(/\.(\d{3})(\d)/, '.$1/$2')
+             .replace(/(\d{4})(\d)/, '$1-$2');
+      }
+      this.value = v.substring(0, 18);
+    });
+  }
+
+  // ── Máscara de telefone ───────────────────────────────
+  const inputTel = document.getElementById('telefone');
+  if (inputTel) {
+    inputTel.addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 11);
+      if (v.length > 10) {
+        v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+      } else if (v.length > 6) {
+        v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+      } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d+)$/, '($1) $2');
+      }
+      this.value = v;
+    });
+  }
+
+  // ── Feedback visual no submit ─────────────────────────
+  const form    = document.getElementById('form-empresa');
+  const btnSave = document.getElementById('btn-salvar');
+  if (form && btnSave) {
+    form.addEventListener('submit', function () {
+      btnSave.disabled = true;
+      btnSave.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Salvando...';
+    });
+  }
+</script>
+{% endblock %}

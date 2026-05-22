@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Welcome Banner ──────────────────────────────── -->
+<div class="welcome-banner">
+  <div class="welcome-text">
+    <h2>Bem-vindo ao TecOS Local <span class="highlight">v1.0</span></h2>
+    <p>Painel de controle da sua assistência técnica. Gerencie clientes, equipamentos e ordens de serviço com eficiência.</p>
+  </div>
+  <div class="welcome-icon">
+    <i class="bi bi-cpu-fill"></i>
+  </div>
+</div>
+
+<!-- ── Cards de Estatísticas ───────────────────────── -->
+<div class="row g-4 mt-1">
+
+  <!-- Clientes -->
+  <div class="col-12 col-sm-6 col-xl-4">
+    <div class="stat-card stat-card--blue" id="card-clientes">
+      <div class="stat-card__icon">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Total de Clientes</span>
+        <span class="stat-card__value">{{ stats.total_clientes }}</span>
+      </div>
+      <div class="stat-card__footer">
+        <i class="bi bi-arrow-right-circle me-1"></i> Gerenciar clientes
+      </div>
+    </div>
+  </div>
+
+  <!-- Equipamentos -->
+  <div class="col-12 col-sm-6 col-xl-4">
+    <div class="stat-card stat-card--purple" id="card-equipamentos">
+      <div class="stat-card__icon">
+        <i class="bi bi-tools"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Total de Equipamentos</span>
+        <span class="stat-card__value">{{ stats.total_equipamentos }}</span>
+      </div>
+      <div class="stat-card__footer">
+        <i class="bi bi-arrow-right-circle me-1"></i> Gerenciar equipamentos
+      </div>
+    </div>
+  </div>
+
+  <!-- OS Abertas -->
+  <div class="col-12 col-sm-6 col-xl-4">
+    <div class="stat-card stat-card--orange" id="card-os-abertas">
+      <div class="stat-card__icon">
+        <i class="bi bi-folder2-open"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Ordens Abertas</span>
+        <span class="stat-card__value">{{ stats.os_abertas }}</span>
+      </div>
+      <div class="stat-card__footer">
+        <i class="bi bi-arrow-right-circle me-1"></i> Ver ordens abertas
+      </div>
+    </div>
+  </div>
+
+  <!-- OS Em Andamento -->
+  <div class="col-12 col-sm-6 col-xl-4">
+    <div class="stat-card stat-card--yellow" id="card-os-andamento">
+      <div class="stat-card__icon">
+        <i class="bi bi-gear-wide-connected"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Em Andamento</span>
+        <span class="stat-card__value">{{ stats.os_andamento }}</span>
+      </div>
+      <div class="stat-card__footer">
+        <i class="bi bi-arrow-right-circle me-1"></i> Ver em andamento
+      </div>
+    </div>
+  </div>
+
+  <!-- OS Concluídas -->
+  <div class="col-12 col-sm-6 col-xl-4">
+    <div class="stat-card stat-card--green" id="card-os-concluidas">
+      <div class="stat-card__icon">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Ordens Concluídas</span>
+        <span class="stat-card__value">{{ stats.os_concluidas }}</span>
+      </div>
+      <div class="stat-card__footer">
+        <i class="bi bi-arrow-right-circle me-1"></i> Ver concluídas
+      </div>
+    </div>
+  </div>
+
+  <!-- Próximas Manutenções -->
+  <div class="col-12 col-sm-6 col-xl-4">
+    <div class="stat-card stat-card--teal" id="card-manutencoes">
+      <div class="stat-card__icon">
+        <i class="bi bi-calendar-check-fill"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Próximas Manutenções</span>
+        <span class="stat-card__value">{{ stats.proximas_manutencoes }}</span>
+      </div>
+      <div class="stat-card__footer">
+        <i class="bi bi-arrow-right-circle me-1"></i> Ver agenda
+      </div>
+    </div>
+  </div>
+
+</div><!-- /row stats -->
+
+<!-- ── Info Sprint ─────────────────────────────────── -->
+<div class="sprint-info-card mt-4">
+  <div class="sprint-info-card__header">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    Sprint 1 — Estrutura Base
+  </div>
+  <div class="sprint-info-card__body">
+    <p>O banco de dados e todas as tabelas foram criados automaticamente. As funcionalidades abaixo serão implementadas nas próximas sprints:</p>
+    <div class="feature-grid">
+      <div class="feature-item feature-item--pending">
+        <i class="bi bi-person-plus-fill"></i> CRUD de Clientes
+      </div>
+      <div class="feature-item feature-item--pending">
+        <i class="bi bi-tools"></i> CRUD de Equipamentos
+      </div>
+      <div class="feature-item feature-item--pending">
+        <i class="bi bi-clipboard2-plus-fill"></i> Ordens de Serviço
+      </div>
+      <div class="feature-item feature-item--pending">
+        <i class="bi bi-building-gear"></i> Cadastro de Empresa
+      </div>
+      <div class="feature-item feature-item--pending">
+        <i class="bi bi-cloud-upload-fill"></i> Backup Automático
+      </div>
+      <div class="feature-item feature-item--pending">
+        <i class="bi bi-file-earmark-pdf-fill"></i> Relatórios PDF
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Animação de contagem dos cards
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.stat-card__value').forEach(el => {
+      const target = parseInt(el.textContent, 10);
+      if (isNaN(target) || target === 0) return;
+      let current = 0;
+      const step = Math.ceil(target / 30);
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current;
+        if (current >= target) clearInterval(timer);
+      }, 40);
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block title %}Clientes{% endblock %}
+{% block page_title %}Clientes{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+<li class="breadcrumb-item active" aria-current="page">Clientes</li>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Toolbar ─────────────────────────────────────────── -->
+<div class="list-toolbar mb-4">
+
+  <!-- Busca -->
+  <form method="GET" action="{{ url_for('clientes_list') }}"
+        class="list-search" id="form-busca" role="search">
+    <i class="bi bi-search list-search__icon"></i>
+    <input type="search"
+           id="input-busca"
+           name="q"
+           class="list-search__input"
+           placeholder="Buscar por nome, telefone ou e-mail..."
+           value="{{ busca }}"
+           autocomplete="off" />
+    {% if busca %}
+    <a href="{{ url_for('clientes_list') }}" class="list-search__clear" title="Limpar busca">
+      <i class="bi bi-x-circle-fill"></i>
+    </a>
+    {% endif %}
+  </form>
+
+  <!-- Botão Novo -->
+  <a href="{{ url_for('cliente_novo') }}"
+     class="btn-primary-action"
+     id="btn-novo-cliente">
+    <i class="bi bi-person-plus-fill me-2"></i>Novo Cliente
+  </a>
+
+</div>
+
+<!-- ── Resultado da busca ──────────────────────────────── -->
+{% if busca %}
+<p class="search-result-info mb-3">
+  <i class="bi bi-funnel me-1"></i>
+  {{ clientes|length }} resultado(s) para <strong>"{{ busca }}"</strong>
+</p>
+{% endif %}
+
+<!-- ── Tabela / Estado vazio ──────────────────────────── -->
+{% if clientes %}
+
+<div class="data-card">
+  <div class="table-responsive">
+    <table class="data-table" id="tabela-clientes">
+      <thead>
+        <tr>
+          <th style="width:30%">Nome</th>
+          <th style="width:18%">Telefone</th>
+          <th style="width:22%">E-mail</th>
+          <th style="width:20%">Endereço</th>
+          <th style="width:10%; text-align:center">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in clientes %}
+        <tr class="data-table__row" id="row-cliente-{{ c.id }}">
+
+          <!-- Nome -->
+          <td>
+            <div class="cell-name">
+              <div class="avatar-initials">
+                {{ c.nome[0]|upper }}
+              </div>
+              <div>
+                <span class="cell-name__text">{{ c.nome }}</span>
+                {% if c.criado_em %}
+                <span class="cell-meta">
+                  Cadastrado em {{ c.criado_em[:10].split('-')|reverse|join('/') }}
+                </span>
+                {% endif %}
+              </div>
+            </div>
+          </td>
+
+          <!-- Telefone -->
+          <td>
+            {% if c.telefone %}
+              <span class="cell-badge cell-badge--phone">
+                <i class="bi bi-telephone me-1"></i>{{ c.telefone }}
+              </span>
+            {% else %}
+              <span class="cell-empty">—</span>
+            {% endif %}
+          </td>
+
+          <!-- E-mail -->
+          <td>
+            {% if c.email %}
+              <a href="mailto:{{ c.email }}" class="cell-link">
+                <i class="bi bi-envelope me-1"></i>{{ c.email }}
+              </a>
+            {% else %}
+              <span class="cell-empty">—</span>
+            {% endif %}
+          </td>
+
+          <!-- Endereço -->
+          <td>
+            <span class="cell-text-truncate" title="{{ c.endereco or '' }}">
+              {{ c.endereco or '—' }}
+            </span>
+          </td>
+
+          <!-- Ações -->
+          <td>
+            <div class="action-btns">
+
+              <a href="{{ url_for('cliente_editar', cliente_id=c.id) }}"
+                 class="action-btn action-btn--edit"
+                 title="Editar cliente"
+                 id="btn-editar-{{ c.id }}">
+                <i class="bi bi-pencil-fill"></i>
+              </a>
+
+              <!-- Formulário de exclusão -->
+              <form method="POST"
+                    action="{{ url_for('cliente_excluir', cliente_id=c.id) }}"
+                    class="d-inline"
+                    id="form-excluir-{{ c.id }}"
+                    onsubmit="return confirmarExclusao(event, '{{ c.nome|e }}')">
+                <button type="submit"
+                        class="action-btn action-btn--delete"
+                        title="Excluir cliente"
+                        id="btn-excluir-{{ c.id }}">
+                  <i class="bi bi-trash3-fill"></i>
+                </button>
+              </form>
+
+            </div>
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Rodapé da tabela -->
+  <div class="data-card__footer">
+    <span>
+      <i class="bi bi-people me-1"></i>
+      {{ clientes|length }} cliente(s){% if busca %} encontrado(s){% endif %}
+    </span>
+  </div>
+</div>
+
+{% else %}
+
+<!-- Estado vazio -->
+<div class="empty-state" id="empty-state-clientes">
+  <div class="empty-state__icon">
+    <i class="bi bi-people"></i>
+  </div>
+  {% if busca %}
+    <h3 class="empty-state__title">Nenhum resultado</h3>
+    <p class="empty-state__desc">
+      Nenhum cliente encontrado para <strong>"{{ busca }}"</strong>.<br>
+      Tente buscar por outro nome, telefone ou e-mail.
+    </p>
+    <a href="{{ url_for('clientes_list') }}" class="btn-primary-action">
+      <i class="bi bi-arrow-left me-2"></i>Ver todos os clientes
+    </a>
+  {% else %}
+    <h3 class="empty-state__title">Nenhum cliente cadastrado</h3>
+    <p class="empty-state__desc">
+      Comece adicionando o primeiro cliente da sua assistência técnica.
+    </p>
+    <a href="{{ url_for('cliente_novo') }}" class="btn-primary-action" id="btn-primeiro-cliente">
+      <i class="bi bi-person-plus-fill me-2"></i>Cadastrar primeiro cliente
+    </a>
+  {% endif %}
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script>
+  // ── Confirmação de exclusão ───────────────────────────
+  function confirmarExclusao(event, nome) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (confirm(`Tem certeza que deseja excluir o cliente "${nome}"?\n\nEsta ação não pode ser desfeita.`)) {
+      form.submit();
+    }
+    return false;
+  }
+
+  // ── Busca em tempo real (filtra sem submit) ───────────
+  const inputBusca = document.getElementById('input-busca');
+  let debounceTimer;
+  if (inputBusca) {
+    inputBusca.addEventListener('input', function () {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        document.getElementById('form-busca').submit();
+      }, 500);
+    });
+  }
+</script>
+{% endblock %}

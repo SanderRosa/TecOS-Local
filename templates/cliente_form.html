@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+{% set is_novo = (acao == 'novo') %}
+
+{% block title %}{{ 'Novo Cliente' if is_novo else 'Editar Cliente' }}{% endblock %}
+{% block page_title %}{{ 'Novo Cliente' if is_novo else 'Editar Cliente' }}{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('clientes_list') }}">Clientes</a></li>
+<li class="breadcrumb-item active" aria-current="page">
+  {{ 'Novo' if is_novo else 'Editar' }}
+</li>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Header da seção ─────────────────────────────────── -->
+<div class="section-header mb-4">
+  <div>
+    <h2 class="section-title">
+      <i class="bi bi-{{ 'person-plus-fill' if is_novo else 'pencil-square' }} me-2"></i>
+      {{ 'Novo Cliente' if is_novo else 'Editar: ' ~ cliente.nome }}
+    </h2>
+    <p class="section-subtitle">
+      {% if is_novo %}
+        Preencha os dados do novo cliente da assistência técnica.
+      {% else %}
+        Atualize as informações do cliente abaixo.
+      {% endif %}
+    </p>
+  </div>
+  <div class="section-badge {{ 'section-badge--new' if is_novo else 'section-badge--edit' }}">
+    <i class="bi bi-{{ 'plus-circle' if is_novo else 'pencil-square' }} me-1"></i>
+    {{ 'Novo cadastro' if is_novo else 'Editando cadastro' }}
+  </div>
+</div>
+
+<!-- ── Formulário ─────────────────────────────────────── -->
+<form method="POST"
+      action="{{ url_for('cliente_criar') if is_novo else url_for('cliente_salvar', cliente_id=cliente.id) }}"
+      id="form-cliente"
+      novalidate>
+
+  <div class="row g-4">
+
+    <!-- Coluna principal -->
+    <div class="col-12 col-xl-8">
+      <div class="form-card">
+
+        <div class="form-card__header">
+          <i class="bi bi-person me-2"></i>Informações do Cliente
+        </div>
+
+        <div class="form-card__body">
+
+          <!-- Nome -->
+          <div class="mb-4">
+            <label for="nome" class="form-label-custom">
+              <i class="bi bi-person-fill"></i> Nome completo
+              <span class="required-mark">*</span>
+            </label>
+            <input type="text"
+                   id="nome"
+                   name="nome"
+                   class="form-control-custom"
+                   placeholder="Nome do cliente ou razão social"
+                   value="{{ cliente.nome if cliente else '' }}"
+                   required
+                   autofocus
+                   maxlength="200" />
+          </div>
+
+          <!-- Telefone + E-mail -->
+          <div class="row g-3 mb-4">
+            <div class="col-12 col-md-6">
+              <label for="telefone" class="form-label-custom">
+                <i class="bi bi-telephone-fill"></i> Telefone / WhatsApp
+              </label>
+              <input type="tel"
+                     id="telefone"
+                     name="telefone"
+                     class="form-control-custom"
+                     placeholder="(00) 00000-0000"
+                     value="{{ cliente.telefone if cliente and cliente.telefone else '' }}"
+                     maxlength="20" />
+            </div>
+            <div class="col-12 col-md-6">
+              <label for="email" class="form-label-custom">
+                <i class="bi bi-envelope-fill"></i> E-mail
+              </label>
+              <input type="email"
+                     id="email"
+                     name="email"
+                     class="form-control-custom"
+                     placeholder="email@exemplo.com"
+                     value="{{ cliente.email if cliente and cliente.email else '' }}"
+                     maxlength="120" />
+            </div>
+          </div>
+
+          <!-- Endereço -->
+          <div class="mb-4">
+            <label for="endereco" class="form-label-custom">
+              <i class="bi bi-geo-alt-fill"></i> Endereço
+            </label>
+            <input type="text"
+                   id="endereco"
+                   name="endereco"
+                   class="form-control-custom"
+                   placeholder="Rua, número, bairro, cidade/UF"
+                   value="{{ cliente.endereco if cliente and cliente.endereco else '' }}"
+                   maxlength="300" />
+          </div>
+
+          <!-- Observações -->
+          <div class="mb-2">
+            <label for="observacoes" class="form-label-custom">
+              <i class="bi bi-chat-left-text-fill"></i> Observações
+            </label>
+            <textarea id="observacoes"
+                      name="observacoes"
+                      class="form-control-custom"
+                      rows="4"
+                      placeholder="Informações adicionais, preferências, histórico..."
+                      maxlength="1000">{{ cliente.observacoes if cliente and cliente.observacoes else '' }}</textarea>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna lateral (ações + info) -->
+    <div class="col-12 col-xl-4">
+
+      <!-- Ações -->
+      <div class="form-card mb-4">
+        <div class="form-card__header">
+          <i class="bi bi-check2-circle me-2"></i>Ações
+        </div>
+        <div class="form-card__body">
+
+          <button type="submit"
+                  class="btn-save w-100 mb-3"
+                  id="btn-salvar">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            {{ 'Cadastrar Cliente' if is_novo else 'Salvar Alterações' }}
+          </button>
+
+          <a href="{{ url_for('clientes_list') }}"
+             class="btn-cancel w-100">
+            <i class="bi bi-arrow-left me-2"></i>
+            Voltar para Clientes
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Info do cadastro (somente na edição) -->
+      {% if not is_novo and cliente %}
+      <div class="form-card">
+        <div class="form-card__header">
+          <i class="bi bi-info-circle me-2"></i>Informações do Registro
+        </div>
+        <div class="form-card__body">
+          <div class="info-row">
+            <span class="info-label">ID</span>
+            <span class="info-value">#{{ cliente.id }}</span>
+          </div>
+          {% if cliente.criado_em %}
+          <div class="info-row">
+            <span class="info-label">Cadastrado em</span>
+            <span class="info-value">
+              {{ cliente.criado_em[:10].split('-')|reverse|join('/') }}
+            </span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</form>
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script>
+  // ── Máscara de telefone ───────────────────────────────
+  const inputTel = document.getElementById('telefone');
+  if (inputTel) {
+    inputTel.addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 11);
+      if (v.length > 10) {
+        v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+      } else if (v.length > 6) {
+        v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+      } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d+)$/, '($1) $2');
+      }
+      this.value = v;
+    });
+  }
+
+  // ── Validação inline do nome ──────────────────────────
+  const form    = document.getElementById('form-cliente');
+  const btnSave = document.getElementById('btn-salvar');
+  const inputNome = document.getElementById('nome');
+
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      if (!inputNome.value.trim()) {
+        e.preventDefault();
+        inputNome.classList.add('input-invalid');
+        inputNome.focus();
+        return;
+      }
+      btnSave.disabled = true;
+      btnSave.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Salvando...';
+    });
+  }
+
+  if (inputNome) {
+    inputNome.addEventListener('input', function () {
+      if (this.value.trim()) this.classList.remove('input-invalid');
+    });
+  }
+</script>
+{% endblock %}
