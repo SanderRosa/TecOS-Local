@@ -1,128 +1,25 @@
-# TecOS Local v1.0
+# 🛠️ TecOS Local v1.0
 
-> Sistema de gerenciamento de ordens de serviço para assistências técnicas — roda 100% local, sem internet (exceto para carregar Bootstrap via CDN).
+Sistema de gerenciamento de ordens de serviço focado em assistências técnicas. Desenvolvido para operar de maneira 100% local, em modo desktop-web, sem depender de internet constante, servidores em nuvem ou licenças pagas.
 
----
+## 🚀 Funcionalidades
+- **Gestão de OS**: Criação, atualização e acompanhamento de Ordens de Serviço.
+- **Cadastro Completo**: CRUD de clientes, equipamentos e dados da própria assistência.
+- **Dashboard Interativo**: Acompanhamento de estatísticas de negócio e fluxo em tempo real.
+- **Banco de Dados Local**: Autocriação de banco SQLite isolado e seguro no próprio PC.
 
-## 📋 Sobre o Projeto
+## 🛠️ Tecnologias Utilizadas
+- **Python 3.10+** (Backend da aplicação)
+- **Flask** (Framework Web micro-arquitetura)
+- **SQLite** (Banco de dados relacional embarcado)
+- **HTML5 / CSS3 / JavaScript** (Frontend e templates Flask)
+- **Bootstrap 5** (Design responsivo e padronizado)
 
-O **TecOS Local** é um sistema desktop-web que roda no próprio computador da assistência técnica, acessível via navegador em `http://localhost:5000`. Não exige servidores externos, planos pagos ou instalação complexa.
+## ⚙️ Como Executar
+1. Dê um duplo clique no arquivo **`iniciar_sistema.bat`**.
+2. O script vai automaticamente criar um ambiente virtual (`venv`), instalar o Flask e as bibliotecas necessárias.
+3. O servidor subirá e abrirá seu navegador automaticamente em `http://localhost:5000`.
+4. Opcionalmente (via terminal): rode `python -m venv venv`, ative-o, instale `requirements.txt` e inicie com `python app.py`.
 
----
-
-## 🚀 Como Iniciar
-
-### Opção 1 — Duplo clique (recomendado)
-
-Execute o arquivo **`iniciar_sistema.bat`**. Ele irá:
-
-1. Verificar se o Python está instalado
-2. Criar um ambiente virtual (`venv/`)
-3. Instalar as dependências automaticamente
-4. Iniciar o servidor Flask
-5. Abrir o navegador em `http://localhost:5000`
-
-### Opção 2 — Terminal manual
-
-```bash
-# 1. Criar ambiente virtual (somente na primeira vez)
-python -m venv venv
-
-# 2. Ativar o ambiente virtual
-# Windows:
-venv\Scripts\activate
-# Linux/Mac:
-source venv/bin/activate
-
-# 3. Instalar dependências
-pip install -r requirements.txt
-
-# 4. Iniciar o sistema
-python app.py
-```
-
----
-
-## 🗂️ Estrutura de Pastas
-
-```
-tecos-local/
-│
-├── app.py                  ← Aplicação Flask principal
-├── database.db             ← Banco SQLite (criado automaticamente)
-├── requirements.txt        ← Dependências Python
-├── iniciar_sistema.bat     ← Script de inicialização (Windows)
-├── README.md               ← Este arquivo
-│
-├── static/
-│   ├── css/
-│   │   └── style.css       ← Estilos personalizados
-│   ├── uploads/            ← Fotos de OS (Sprint futura)
-│   └── logos/              ← Logo da empresa (Sprint futura)
-│
-├── templates/
-│   ├── base.html           ← Template base com sidebar e topbar
-│   └── dashboard.html      ← Página principal (dashboard)
-│
-├── relatorios/             ← PDFs gerados (Sprint futura)
-└── backups/                ← Backups do banco (Sprint futura)
-```
-
----
-
-## 🗃️ Banco de Dados
-
-O banco **`database.db`** é criado automaticamente na primeira execução com as tabelas:
-
-| Tabela | Descrição |
-|---|---|
-| `empresa` | Dados da assistência técnica |
-| `clientes` | Cadastro de clientes |
-| `equipamentos` | Equipamentos vinculados a clientes |
-| `ordens_servico` | Ordens de serviço |
-| `fotos_os` | Fotos vinculadas às OS |
-
----
-
-## ✅ Checklist — Sprint 1
-
-- [x] Estrutura inicial do projeto
-- [x] `app.py` funcional (Flask)
-- [x] Criação automática de pastas
-- [x] Criação automática do banco SQLite e tabelas
-- [x] Template `base.html` com Bootstrap 5
-- [x] Dashboard com 6 cards de estatísticas
-- [x] Sidebar com menu completo
-- [x] `static/css/style.css` — design profissional
-- [x] `requirements.txt`
-- [x] `iniciar_sistema.bat`
-- [x] `README.md`
-
----
-
-## 🔄 Sprints Planejadas
-
-| Sprint | Funcionalidades |
-|---|---|
-| **Sprint 1** ✅ | Estrutura base, banco, dashboard |
-| **Sprint 2** | Cadastro de Empresa |
-| **Sprint 3** | CRUD de Clientes |
-| **Sprint 4** | CRUD de Equipamentos |
-| **Sprint 5** | Ordens de Serviço (CRUD + PDF) |
-| **Sprint 6** | Upload de Fotos |
-| **Sprint 7** | Backup automático |
-
----
-
-## ⚙️ Requisitos
-
-- **Python** 3.10 ou superior → [python.org](https://www.python.org/downloads/)
-- **Navegador** moderno (Chrome, Firefox, Edge)
-- Conexão com internet apenas para carregar Bootstrap 5 via CDN
-
----
-
-## 📌 Notas
-
-- O servidor roda em modo **debug** durante o desenvolvimento. Para produção, desative `debug=True` no `app.py`.
-- O banco `database.db` **não** deve ser compartilhado em repositórios públicos (adicione ao `.gitignore`).
+## 📸 Demonstração
+*(Espaço reservado para capturas de tela do dashboard do TecOS Local)*
